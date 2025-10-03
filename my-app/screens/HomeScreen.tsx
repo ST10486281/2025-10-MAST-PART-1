@@ -1,34 +1,29 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import DishFormModal from './DishFormModal';
+import DishList from './DishList';
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = React.useState(false);
 
-  const courses = ['Starter', 'Main', 'Dessert'];
-
-  // flat array instead of multidimensional
-  const [menu, setMenu] = React.useState<Array<any>>([]);
+  const courses = ['Starters', 'Mains', 'Desserts'];
+  const [menu, setMenu] = React.useState<any[]>([]);
 
   const handleSubmit = (dish: any) => {
-    setMenu(prev => [...prev, dish]); // just append
+    setMenu(prev => [...prev, dish]);
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 16 }}>
         <Button mode="contained" onPress={() => setModalVisible(true)}>
           Add Dish
         </Button>
       </View>
 
-      {/* raw object display */}
-      <View style={{ marginTop: 20 }}>
-        <Text selectable style={{ fontFamily: 'monospace' }}>
-          {JSON.stringify(menu, null, 2)}
-        </Text>
-      </View>
+      {/* Subcomponent handles display */}
+      <DishList courses={courses} menu={menu} />
 
       <DishFormModal
         visible={modalVisible}
