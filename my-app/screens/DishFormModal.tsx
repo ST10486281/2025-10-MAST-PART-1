@@ -1,19 +1,28 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { Button, Dialog, Portal, TextInput, Menu } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput, Menu, HelperText } from 'react-native-paper';
+
+type Dish = {
+  name: string;
+  description: string;
+  course: number;
+  price: number;
+};
 
 type DishFormModalProps = {
   visible: boolean;
   title: string;
   saveLabel?: string;
+  courses: string[];
   onDismiss: () => void;
-  onSubmit: (dish: { name: string; description: string; course: number | null; price: number }) => void;
+  onSubmit: (dish: Dish) => void;
 };
 
 export default function DishFormModal({
   visible,
   title,
   saveLabel = 'Save',
+  courses,
   onDismiss,
   onSubmit,
 }: DishFormModalProps) {
@@ -21,15 +30,16 @@ export default function DishFormModal({
   const [description, setDescription] = React.useState('');
   const [course, setCourse] = React.useState<number | null>(null);
   const [price, setPrice] = React.useState('');
+  const [priceError, setPriceError] = React.useState(false);
 
   const [menuVisible, setMenuVisible] = React.useState(false);
-  const courses = ['Starter', 'Main', 'Dessert'];
 
   const resetForm = () => {
     setName('');
     setDescription('');
     setCourse(null);
     setPrice('');
+    setPriceError(false);
   };
 
   const handleDismiss = () => {
@@ -38,12 +48,22 @@ export default function DishFormModal({
   };
 
   const handleSave = () => {
-    const dish = {
+    const parsedPrice = parseFloat(price);
+
+    if (isNaN(parsedPrice)) {
+      setPriceError(true);
+      return; // block save
+    }
+
+    if (course === null) return; // require course
+
+    const dish: Dish = {
       name,
       description,
       course,
-      price: parseFloat(price),
+      price: parsedPrice,
     };
+
     onSubmit(dish);
     resetForm();
     onDismiss();
@@ -96,9 +116,18 @@ export default function DishFormModal({
           <TextInput
             label="Price"
             value={price}
-            onChangeText={setPrice}
+            onChangeText={text => {
+              setPrice(text);
+              setPriceError(false);
+            }}
             keyboardType="numeric"
+            error={priceError}
           />
+          {priceError && (
+            <HelperText type="error" visible={priceError}>
+              Price must be a number
+            </HelperText>
+          )}
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={handleDismiss}>Cancel</Button>
