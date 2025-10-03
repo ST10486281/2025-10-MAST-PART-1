@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import DishFormModal from './DishFormModal';
 import DishList from './DishList';
@@ -16,15 +16,24 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 16 }}>
+      {/* Header row with count + add button */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <Text>Total items: {menu.length}</Text>
         <Button mode="contained" onPress={() => setModalVisible(true)}>
           Add Dish
         </Button>
       </View>
 
-      {/* Subcomponent handles display */}
+      {/* List */}
       <DishList courses={courses} menu={menu} />
 
+      {/* Modal */}
       <DishFormModal
         visible={modalVisible}
         title="Add Dish"
