@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { List, Avatar, Text } from 'react-native-paper';
 
 type Dish = {
   name: string;
@@ -23,10 +24,32 @@ export default function DishList({ courses, menu }: DishListProps) {
   }, [courses, menu]);
 
   return (
-    <View style={{ padding: 16 }}>
-      <Text selectable style={{ fontFamily: 'monospace' }}>
-        {JSON.stringify(grouped, null, 2)}
-      </Text>
+    <View style={{ paddingHorizontal: 8 }}>
+      {grouped.map((group, idx) => (
+        <View key={idx}>
+          <List.Subheader style={{ padding: 0 }}>{group.course}</List.Subheader>
+
+          {group.items.map((dish, i) => (
+            <List.Item
+              key={i}
+              title={dish.name}
+              description={dish.description}
+              left={() => <Avatar.Icon size={40} icon="food" />}
+              right={() => (
+                <View style={{ justifyContent: 'center', paddingRight: 8 }}>
+                  <Text>R {dish.price.toFixed(2)}</Text>
+                </View>
+              )}
+            />
+          ))}
+
+          {group.items.length === 0 && (
+            <View style={{ paddingLeft: 16, paddingVertical: 4 }}>
+              <Text>No items yet</Text>
+            </View>
+          )}
+        </View>
+      ))}
     </View>
   );
 }

@@ -15,7 +15,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 16 }}>
         <Button mode="contained" onPress={() => setModalVisible(true)}>
           Add Dish
